@@ -1,13 +1,11 @@
-print("Hello, World!")
-from db.crud import get_categories, get_books
+from fastapi import FastAPI
+from app.api import books, categories
 
-cats = get_categories()
-books = get_books()
+app = FastAPI(title="Octagon Books API")
 
-print("CATEGORIES:")
-for c in cats:
-    print(c.id, c.title)
+app.include_router(categories.router, prefix="/categories", tags=["Categories"])
+app.include_router(books.router, prefix="/books", tags=["Books"])
 
-print("\nBOOKS:")
-for b in books:
-    print(b.title, b.price)
+@app.get("/health", tags=["Health"])
+def health():
+    return {"status": "ok"}
